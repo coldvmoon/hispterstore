@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.xkwu.test.domain.WishList;
 
 import com.xkwu.test.repository.WishListRepository;
+import com.xkwu.test.service.UserService;
 import com.xkwu.test.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,8 @@ public class WishListResource {
     @Inject
     private WishListRepository wishListRepository;
 
+    @Inject
+    private UserService userService;
     /**
      * POST  /wish-lists : Create a new wishList.
      *
@@ -45,7 +49,7 @@ public class WishListResource {
         if (wishList.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("wishList", "idexists", "A new wishList cannot already have an ID")).body(null);
         }
-        WishList result = wishListRepository.save(wishList);
+        WishList result = wishListRepository.save(wishList).user(userService.getUserWithAuthorities()).creationDate(LocalDate.now());
         return ResponseEntity.created(new URI("/api/wish-lists/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("wishList", result.getId().toString()))
             .body(result);
