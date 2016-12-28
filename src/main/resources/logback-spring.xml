@@ -24,6 +24,8 @@
 
     <logger name="com.xkwu.test" level="#logback.loglevel#"/>
 
+    <logger name="org.hibernate.SQL" level="TRACE"></logger>
+    <logger name="org.hibernate.type" level="TRACE"></logger>
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>
     <logger name="javax.xml.bind" level="WARN"/>
